@@ -30,6 +30,18 @@ def _load_pipeline(model_id: str, device: int) -> Any:
     return pipeline("translation", model=model_id, device=device)
 
 
+def _login(token: str) -> None:
+    """Authenticate with the HuggingFace Hub.
+
+    A test seam (like :func:`_load_pipeline`): tests patch
+    ``translation.core._login`` rather than ``huggingface_hub.login``, which is a
+    lazy module attribute and cannot be patched reliably.
+    """
+    from huggingface_hub import login
+
+    login(token)
+
+
 class Translator:
     """Lazily loads HF translation pipelines and routes translation requests."""
 
@@ -50,9 +62,7 @@ class Translator:
             return
         token = get_hf_token()
         if token:
-            from huggingface_hub import login
-
-            login(token)
+            _login(token)
         self._logged_in = True
 
     def _get_pipeline(self, model_id: str) -> Any:
@@ -76,4 +86,4 @@ class Translator:
         """
         resolved = resolve_model_id(direction=direction, model_id=model_id)
         pipe = self._get_pipeline(resolved)
-        return pipe(text, **params) if params else pipe(text)
+        return pipe(text, **params)
