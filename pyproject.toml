@@ -1,0 +1,32 @@
+[project]
+name = "meyabase-translate-inference"
+version = "0.1.0"
+description = "Inference for meyabase English<->Nigerian translation models, with HuggingFace and local entrypoints."
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "transformers>=4.40",
+    "huggingface-hub>=0.23",
+    "sentencepiece>=0.2",
+    "sacremoses>=0.1",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "pydantic>=2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "integration: real-model tests that download from the Hub (deselected by default)",
+]
+addopts = "-m 'not integration'"

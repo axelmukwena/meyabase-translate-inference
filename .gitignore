@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+
+# Env
+.env
+
+# Model snapshots (loaded from the Hub at runtime, not committed)
+en-ng-translation/
+ng-en-translation/
+multi-translation-inference/
+
+# OS
+.DS_Store
