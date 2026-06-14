@@ -6,7 +6,7 @@ from translation.core import Translator, extract_translations
 def test_translate_routes_to_correct_model():
     t = Translator()
     out = t.translate("Hello", direction="en-ng")
-    # fake_pipeline embeds the resolved model id in its output
+    # fake_load_pipeline embeds the resolved model id in its output
     assert out == [{"translation_text": "<meyabase/en-ng-translation>::Hello"}]
 
 
@@ -17,16 +17,16 @@ def test_translate_by_model_id():
 
 
 def test_pipeline_is_cached(monkeypatch):
-    import transformers
+    import translation.core as core
 
     calls = []
-    orig = transformers.pipeline
+    inner = core._load_pipeline  # the conftest fake, applied via autouse fixture
 
-    def counting_pipeline(*args, **kwargs):
-        calls.append(kwargs.get("model"))
-        return orig(*args, **kwargs)
+    def counting_load(model_id, device):
+        calls.append(model_id)
+        return inner(model_id, device)
 
-    monkeypatch.setattr(transformers, "pipeline", counting_pipeline)
+    monkeypatch.setattr(core, "_load_pipeline", counting_load)
     t = Translator()
     t.translate("a", direction="en-ng")
     t.translate("b", direction="en-ng")

@@ -17,6 +17,19 @@ def extract_translations(prediction: Any) -> Any:
     return texts[0] if len(texts) == 1 else texts
 
 
+def _load_pipeline(model_id: str, device: int) -> Any:
+    """Build a HF translation pipeline for ``model_id`` on ``device``.
+
+    Isolated as a single seam so tests can replace pipeline construction by
+    patching ``translation.core._load_pipeline`` — reliable, unlike patching
+    ``transformers.pipeline`` (a lazy module attribute). Imported lazily so the
+    heavy ``transformers`` import only happens when a model is actually loaded.
+    """
+    from transformers import pipeline
+
+    return pipeline("translation", model=model_id, device=device)
+
+
 class Translator:
     """Lazily loads HF translation pipelines and routes translation requests."""
 
@@ -44,12 +57,8 @@ class Translator:
 
     def _get_pipeline(self, model_id: str) -> Any:
         if model_id not in self._pipelines:
-            from transformers import pipeline
-
             self._maybe_login()
-            self._pipelines[model_id] = pipeline(
-                "translation", model=model_id, device=self._get_device()
-            )
+            self._pipelines[model_id] = _load_pipeline(model_id, self._get_device())
         return self._pipelines[model_id]
 
     def translate(
