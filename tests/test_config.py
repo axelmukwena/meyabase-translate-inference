@@ -1,6 +1,6 @@
 import pytest
 
-from translation.config import DIRECTIONS, resolve_model_id
+from translation.config import DIRECTIONS, get_hf_token, resolve_model_id
 
 
 def test_directions_registry():
@@ -29,3 +29,13 @@ def test_resolve_unknown_model_id_raises():
 def test_resolve_requires_one_argument():
     with pytest.raises(ValueError, match="direction or model_id"):
         resolve_model_id()
+
+
+def test_get_hf_token_returns_token(monkeypatch):
+    monkeypatch.setenv("TF_TOKEN", "hf_abc123")
+    assert get_hf_token() == "hf_abc123"
+
+
+def test_get_hf_token_returns_none_when_unset(monkeypatch):
+    monkeypatch.delenv("TF_TOKEN", raising=False)
+    assert get_hf_token() is None
