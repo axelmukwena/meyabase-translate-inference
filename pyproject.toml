@@ -1,7 +1,7 @@
 [project]
 name = "meyabase-translate-inference"
 version = "0.1.0"
-description = "Inference for meyabase English<->Nigerian translation models, with HuggingFace and local entrypoints."
+description = "Inference for the meyabase en-ng / ng-en translation models, with HuggingFace and local entrypoints."
 requires-python = ">=3.10"
 dependencies = [
     "torch>=2.0",
