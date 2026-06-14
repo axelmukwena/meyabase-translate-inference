@@ -39,6 +39,26 @@ def test_translate_unknown_direction_raises():
         t.translate("x", direction="zz-yy")
 
 
+def test_login_called_when_token_set(monkeypatch):
+    import translation.core as core
+
+    monkeypatch.setenv("TF_TOKEN", "fake-token")
+    calls = []
+    monkeypatch.setattr(core, "_login", lambda token: calls.append(token))
+    Translator().translate("Hello", direction="en-ng")
+    assert calls == ["fake-token"]
+
+
+def test_login_not_called_without_token(monkeypatch):
+    import translation.core as core
+
+    # TF_TOKEN is cleared by the autouse fixture; no login should be attempted.
+    calls = []
+    monkeypatch.setattr(core, "_login", lambda token: calls.append(token))
+    Translator().translate("Hello", direction="en-ng")
+    assert calls == []
+
+
 def test_extract_translations_single():
     assert extract_translations([{"translation_text": "bonjour"}]) == "bonjour"
 
