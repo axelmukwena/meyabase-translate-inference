@@ -9,11 +9,12 @@ from translation.config import get_hf_token, resolve_model_id
 def extract_translations(prediction: Any) -> Any:
     """Pull ``translation_text`` out of a pipeline prediction.
 
-    Returns a single string when there is one result, else a list of strings.
+    Accepts a single dict or a list of dicts and normalizes both through one
+    path: returns a single string when there is exactly one result, else a list
+    of strings.
     """
-    if isinstance(prediction, dict):
-        return prediction.get("translation_text", "")
-    texts = [p.get("translation_text", "") for p in prediction]
+    items = [prediction] if isinstance(prediction, dict) else list(prediction)
+    texts = [item.get("translation_text", "") for item in items]
     return texts[0] if len(texts) == 1 else texts
 
 

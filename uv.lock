@@ -506,14 +506,11 @@ name = "meyabase-translate-inference"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "fastapi" },
     { name = "huggingface-hub" },
-    { name = "pydantic" },
     { name = "sacremoses" },
     { name = "sentencepiece" },
     { name = "torch" },
     { name = "transformers" },
-    { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
@@ -521,23 +518,30 @@ dev = [
     { name = "httpx" },
     { name = "pytest" },
 ]
+server = [
+    { name = "fastapi" },
+    { name = "pydantic" },
+    { name = "uvicorn" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "fastapi", specifier = ">=0.110" },
     { name = "huggingface-hub", specifier = ">=0.23" },
-    { name = "pydantic", specifier = ">=2.0" },
     { name = "sacremoses", specifier = ">=0.1" },
     { name = "sentencepiece", specifier = ">=0.2" },
     { name = "torch", specifier = ">=2.0" },
     { name = "transformers", specifier = ">=4.40,<5" },
-    { name = "uvicorn", specifier = ">=0.29" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "httpx", specifier = ">=0.27" },
     { name = "pytest", specifier = ">=8.0" },
+]
+server = [
+    { name = "fastapi", specifier = ">=0.110" },
+    { name = "pydantic", specifier = ">=2.0" },
+    { name = "uvicorn", specifier = ">=0.29" },
 ]
 
 [[package]]

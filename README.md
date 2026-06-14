@@ -83,7 +83,7 @@ the endpoint at a repo containing [handler.py](handler.py) + `requirements.txt`.
 Regenerate the file whenever dependencies change:
 
 ```bash
-uv export --no-hashes --no-dev -o requirements.txt
+uv export --no-hashes --no-default-groups -o requirements.txt
 ```
 
 Request payload:
